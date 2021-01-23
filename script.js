@@ -115,22 +115,12 @@ function sum(arr, pos) {
 }
 
 window.addEventListener('keydown', e => {
-  matrix.map(e => {
-    if (e.includes(2048) || e.every(k => k!== '')) {
-      let x = ShowModal(` Game is over and the score is ${score}`);
-      let restartBtn = document.querySelector('#restart');
-      restartBtn.addEventListener('click', () => { // starts new game
-        ShowModal().style.display = 'none'
-        clearMatrix() // makes new board
-        AddScore(true); // new score from zero
-      })
-
-    }
+  matrix.forEach(e => {
+    if (e.includes(2048)) gameOver()
   })
   if (e.key == 'ArrowDown') {
     matrix = reverseArr('down', matrix);
     sum(matrix, 'down')
-
   }
   if (e.key == 'ArrowUp') {
     matrix = reverseArr('up', matrix);
@@ -144,9 +134,13 @@ window.addEventListener('keydown', e => {
   if (e.key == 'ArrowLeft') {
     matrix = reverseArr('left', matrix);
     sum(matrix, 'left')
-
   }
   fill(matrix)
+  if (!matrix.some(k => k.some(b => b == ''))) {
+    gameOver()
+
+  }
+
 })
 
 //get and change score
@@ -182,4 +176,14 @@ function ShowModal(msg) {
   }
   modal_txt.innerHTML += msg;
   return modal;
+}
+function gameOver() {
+   ShowModal(` Game is over and the score is ${score}`);
+  let restartBtn = document.querySelector('#restart');
+  restartBtn.addEventListener('click', () => { // starts new game
+    ShowModal().style.display = 'none'
+    clearMatrix() // makes new board
+    AddScore(true); // new score from zero
+  })
+  return matrix
 }
